@@ -1,18 +1,28 @@
 package com.proyecto4.grantly.registration.screens
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.proyecto4.grantly.R
 import com.proyecto4.grantly.ui.theme.Cenfop4feTheme
-import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,7 +31,7 @@ fun RegistrationScreen(navController: NavController, userType: String?) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Register as ${userType?.replace("_", " ")}") },
+                    title = { Text("") },
                     navigationIcon = {
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(
@@ -33,152 +43,189 @@ fun RegistrationScreen(navController: NavController, userType: String?) {
                 )
             }
         ) { innerPadding ->
-            BackHandler {
-                navController.popBackStack()
-            }
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // App Logo
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = "App Logo",
+                    modifier = Modifier
+                        .size(120.dp)
+                        .padding(vertical = 32.dp)
+                )
 
-            when (userType) {
-                "GOVERNMENT" -> GovernmentRegistrationForm(innerPadding, navController)
-                "STUDENT" -> StudentRegistrationForm(innerPadding, navController)
-                "EDUCATIONAL_INSTITUTION" -> InstitutionRegistrationForm(innerPadding, navController)
-                else -> ErrorScreen(innerPadding)
+                Text(
+                    text = "Create Account",
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(bottom = 24.dp)
+                )
+
+                when (userType?.uppercase()) {
+                    "GOVERNMENT" -> GovernmentRegistrationForm(navController)
+                    "STUDENT" -> StudentRegistrationForm(navController)
+                    "EDUCATIONAL_INSTITUTION" -> InstitutionRegistrationForm(navController)
+                    else -> ErrorScreen()
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Sign In Prompt
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(top = 16.dp)
+                ) {
+                    Text("Already have an account? ")
+                    Text(
+                        text = "Sign In",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.clickable {
+                            navController.navigate("sign_in")
+                        }
+                    )
+                }
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun GovernmentRegistrationForm(padding: PaddingValues, navController: NavController) {
+private fun GovernmentRegistrationForm(navController: NavController) {
     var agencyName by remember { mutableStateOf("") }
     var department by remember { mutableStateOf("") }
     var country by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
 
-    RegistrationFormTemplate(padding) {
-        // Common Fields
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
         FormTextField("Agency Name", agencyName) { agencyName = it }
-        FormTextField("Email", email) { email = it }
-        FormTextField("Phone Number", phone) { phone = it }
-
-        // Government Specific
         FormTextField("Department", department) { department = it }
         FormTextField("Country", country) { country = it }
+        FormTextField("Email", email) { email = it }
+        FormTextField("Phone Number", phone, KeyboardOptions(keyboardType = KeyboardType.Phone)) { phone = it }
 
         SubmitButton("Register Agency") {
-            // Create government user object
+            // Handle registration
             navController.popBackStack()
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun StudentRegistrationForm(padding: PaddingValues, navController: NavController) {
+private fun StudentRegistrationForm(navController: NavController) {
     var fullName by remember { mutableStateOf("") }
-    var birthDate by remember { mutableStateOf("") }
-    var parentName by remember { mutableStateOf("") }
-    var level by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var age by remember { mutableStateOf("") }
+    var degree by remember { mutableStateOf("") }
+    var location by remember { mutableStateOf("") }
 
-    RegistrationFormTemplate(padding) {
-        // Common Fields
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
         FormTextField("Full Name", fullName) { fullName = it }
         FormTextField("Email", email) { email = it }
-        FormTextField("Phone Number", phone) { phone = it }
+        FormTextField("Phone Number", phone, KeyboardOptions(keyboardType = KeyboardType.Phone)) { phone = it }
+        FormTextField(
+            label = "Password",
+            value = password,
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+        ) { password = it }
+        FormTextField("Age", age, KeyboardOptions(keyboardType = KeyboardType.Number)) { age = it }
+        FormTextField("Current Degree", degree) { degree = it }
+        FormTextField("Location", location) { location = it }
 
-        // Student Specific
-        FormTextField("Birth Date (YYYY-MM-DD)", birthDate) { birthDate = it }
-        FormTextField("Education Level", level) { level = it }
-        FormTextField("Parent/Guardian Name", parentName) { parentName = it }
-
-        SubmitButton("Register Student") {
-            // Create student user object
+        SubmitButton("Create Account") {
+            // Handle registration
             navController.popBackStack()
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun InstitutionRegistrationForm(padding: PaddingValues, navController: NavController) {
+private fun InstitutionRegistrationForm(navController: NavController) {
     var institutionName by remember { mutableStateOf("") }
     var institutionType by remember { mutableStateOf("") }
     var address by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
 
-    RegistrationFormTemplate(padding) {
-        // Common Fields
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
         FormTextField("Institution Name", institutionName) { institutionName = it }
-        FormTextField("Email", email) { email = it }
-        FormTextField("Phone Number", phone) { phone = it }
-
-        // Institution Specific
         FormTextField("Institution Type", institutionType) { institutionType = it }
         FormTextField("Address", address) { address = it }
+        FormTextField("Email", email) { email = it }
+        FormTextField("Phone Number", phone, KeyboardOptions(keyboardType = KeyboardType.Phone)) { phone = it }
 
         SubmitButton("Register Institution") {
-            // Create institution user object
+            // Handle registration
             navController.popBackStack()
         }
     }
 }
 
-// Reusable Components
 @Composable
-private fun FormTextField(label: String, value: String, onValueChange: (String) -> Unit) {
+private fun FormTextField(
+    label: String,
+    value: String,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    onValueChange: (String) -> Unit
+) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(label) },
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        keyboardOptions = keyboardOptions,
+        visualTransformation = visualTransformation
     )
 }
 
 @Composable
-private fun RegistrationFormTemplate(
-    paddingValues: PaddingValues,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .padding(paddingValues)
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        content()
-    }
-}
-
-@Composable
 private fun SubmitButton(text: String, onSubmit: () -> Unit) {
-    Spacer(modifier = Modifier.height(24.dp))
     Button(
         onClick = onSubmit,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = Color.White
+        )
     ) {
         Text(text)
     }
 }
 
 @Composable
-private fun ErrorScreen(padding: PaddingValues) {
-    Column(
-        modifier = Modifier
-            .padding(padding)
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center
+private fun ErrorScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "Invalid registration type selected",
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.error
+            text = "Invalid registration type",
+            color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.headlineMedium
         )
     }
 }
