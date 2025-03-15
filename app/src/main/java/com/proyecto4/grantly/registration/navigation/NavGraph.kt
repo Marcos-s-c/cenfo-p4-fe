@@ -22,5 +22,8 @@ fun AppNavGraph(navController: NavHostController) {
                 userType = backStackEntry.arguments?.getString("userType")
             )
         }
+        /**composable("mainDashboard") {
+            MainDashdoardScreen()
+        }**/
     }
 }
