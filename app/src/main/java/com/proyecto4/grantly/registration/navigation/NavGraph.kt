@@ -6,6 +6,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.proyecto4.grantly.registration.screens.RegistrationScreen
 import com.proyecto4.grantly.registration.screens.UserSelectionScreen
+import com.proyecto4.grantly.dashboard.screens.MainDashboardScreen
+
+
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
@@ -22,8 +25,8 @@ fun AppNavGraph(navController: NavHostController) {
                 userType = backStackEntry.arguments?.getString("userType")
             )
         }
-        /**composable("mainDashboard") {
-            MainDashdoardScreen()
-        }**/
+        composable("mainDashboard") {
+            MainDashboardScreen()
+        }
     }
 }
