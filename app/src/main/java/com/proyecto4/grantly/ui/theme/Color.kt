@@ -9,3 +9,5 @@ val Pink80 = Color(0xFFAD1457)
 val Purple40 = Color(0xFF852ACA)  // Same purple for light theme
 val PurpleGrey40 = Color(0xFF6D1BA4)
 val Pink40 = Color(0xFFD81B60)
+
+val backgroundColor = Color(0xFFF2F2F2)

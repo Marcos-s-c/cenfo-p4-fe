@@ -6,12 +6,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.proyecto4.grantly.registration.screens.RegistrationScreen
 import com.proyecto4.grantly.registration.screens.UserSelectionScreen
+import com.proyecto4.grantly.dashboard.screens.MainDashboardScreen
+
+
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = "userSelection"
+        startDestination = "mainDashboard"
     ) {
         composable("userSelection") {
             UserSelectionScreen(navController = navController)
@@ -21,6 +24,9 @@ fun AppNavGraph(navController: NavHostController) {
                 navController = navController, // Add this parameter
                 userType = backStackEntry.arguments?.getString("userType")
             )
+        }
+        composable("mainDashboard") {
+            MainDashboardScreen()
         }
     }
 }
