@@ -16,7 +16,7 @@ import com.proyecto4.grantly.dashboard.screens.MainDashboardScreen
 fun AppNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = "ScholarshipCard"
+        startDestination = "mainDashboard"
     ) {
         composable("userSelection") {
             UserSelectionScreen(navController = navController)
