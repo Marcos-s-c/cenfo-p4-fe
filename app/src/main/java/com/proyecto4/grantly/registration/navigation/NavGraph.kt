@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.proyecto4.grantly.bottomnavbar.BottomNavBar
 import com.proyecto4.grantly.dashboard.screens.MainDashboardScreen
 import com.proyecto4.grantly.registration.screens.LoginScreen
 import com.proyecto4.grantly.registration.screens.RegistrationScreen
@@ -29,6 +30,9 @@ fun AppNavGraph(navController: NavHostController) {
         }
         composable("mainDashboard") {
             MainDashboardScreen()
+        }
+        composable("BottomNavBar") {
+            BottomNavBar()
         }
     }
 }
