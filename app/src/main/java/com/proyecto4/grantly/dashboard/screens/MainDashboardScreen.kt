@@ -12,7 +12,6 @@ import com.proyecto4.grantly.bottomnavbar.BottomNavBar
 import com.proyecto4.grantly.topnavbar.TopBar
 import com.proyecto4.grantly.ui.theme.backgroundColor
 
-
 @Composable
 fun MainDashboardScreen() {
     Scaffold(
@@ -20,15 +19,15 @@ fun MainDashboardScreen() {
         topBar = { TopBar() },
         bottomBar = { BottomNavBar() }
     ) { innerPadding ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
                 ScholarshipCard()
             }
-            // Your screen content goes here
+            // Additional dashboard content can be placed here
         }
     }
 }
-
