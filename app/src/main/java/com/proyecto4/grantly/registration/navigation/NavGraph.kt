@@ -1,6 +1,5 @@
 package com.proyecto4.grantly.registration.navigation
 
-import ScholarshipCard.ScholarshipCard
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -32,9 +31,6 @@ fun AppNavGraph(navController: NavHostController) {
         }
         composable("BottomNavBar") {
             BottomNavBar()
-        }
-        composable("ScholarshipCard") {
-            ScholarshipCard()
         }
     }
 }
