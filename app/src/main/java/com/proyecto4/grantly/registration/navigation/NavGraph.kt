@@ -8,6 +8,7 @@ import com.proyecto4.grantly.dashboard.screens.MainDashboardScreen
 import com.proyecto4.grantly.registration.screens.LoginScreen
 import com.proyecto4.grantly.registration.screens.RegistrationScreen
 import com.proyecto4.grantly.registration.screens.UserSelectionScreen
+import com.proyecto4.grantly.scholarships.screens.ScholarshipsRegistration
 
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -23,10 +24,7 @@ fun NavGraph(navController: NavHostController) {
         }
         composable("userSelection") {
             UserSelectionScreen(
-                onUserTypeSelected = { route ->
-                    // route should be built in the UserSelectionScreen as "registration/<USER_TYPE>"
-                    navController.navigate(route)
-                },
+                onUserTypeSelected = { route -> navController.navigate(route) },
                 onBack = { navController.popBackStack() }
             )
         }
@@ -39,7 +37,18 @@ fun NavGraph(navController: NavHostController) {
             )
         }
         composable("dashboard") {
-            MainDashboardScreen()
+            MainDashboardScreen(
+                onHomeClick = { navController.navigate("dashboard") },
+                onScholarshipsClick = { navController.navigate("scholarships") },
+                onUpdatesClick = { /* Implement updates navigation if needed */ },
+                onProfileClick = { /* Implement profile navigation if needed */ }
+            )
+        }
+        composable("scholarships") {
+            ScholarshipsRegistration(
+                onBack = { navController.navigate("dashboard") },
+                onApplicationRegistrationSuccess = { navController.navigate("dashboard") }
+            )
         }
     }
 }

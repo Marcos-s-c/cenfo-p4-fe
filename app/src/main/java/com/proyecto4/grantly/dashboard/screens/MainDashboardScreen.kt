@@ -8,16 +8,28 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.proyecto4.grantly.bottomnavbar.BottomNavBar
-import com.proyecto4.grantly.topnavbar.TopBar
+import com.proyecto4.grantly.dashboard.bottomnavbar.BottomNavBar
+import com.proyecto4.grantly.dashboard.topnavbar.TopBar
 import com.proyecto4.grantly.ui.theme.backgroundColor
 
 @Composable
-fun MainDashboardScreen() {
+fun MainDashboardScreen(
+    onHomeClick: () -> Unit,
+    onScholarshipsClick: () -> Unit,
+    onUpdatesClick: () -> Unit,
+    onProfileClick: () -> Unit
+) {
     Scaffold(
         containerColor = backgroundColor,
         topBar = { TopBar() },
-        bottomBar = { BottomNavBar() }
+        bottomBar = {
+            BottomNavBar(
+                onHomeClick = onHomeClick,
+                onScholarshipsClick = onScholarshipsClick,
+                onUpdatesClick = onUpdatesClick,
+                onProfileClick = onProfileClick
+            )
+        }
     ) { innerPadding ->
         Box(
             modifier = Modifier

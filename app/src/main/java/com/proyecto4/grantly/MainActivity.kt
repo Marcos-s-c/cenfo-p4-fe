@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.proyecto4.grantly.dashboard.screens.MainDashboardScreen
+import com.proyecto4.grantly.scholarships.screens.ScholarshipsRegistration
 import com.proyecto4.grantly.registration.screens.LoginScreen
 import com.proyecto4.grantly.registration.screens.RegistrationScreen
 import com.proyecto4.grantly.registration.screens.UserSelectionScreen
@@ -18,8 +19,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                // Use a mutable state variable to track which screen to display.
-                // Possible values: "Login", "UserSelection", "Dashboard", or "registration/<USER_TYPE>"
+                // Mutable state to track which screen to display.
+                // Possible values: "Login", "UserSelection", "Dashboard", "registration/<USER_TYPE>", "Scholarships"
                 var currentScreen by remember { mutableStateOf("Login") }
 
                 when {
@@ -32,7 +33,7 @@ class MainActivity : ComponentActivity() {
                     currentScreen == "UserSelection" -> {
                         UserSelectionScreen(
                             onUserTypeSelected = { route ->
-                                // Route is built in UserSelectionScreen, e.g. "registration/GOVERNMENT"
+                                // For example, if user selects "Government", route is "registration/GOVERNMENT"
                                 currentScreen = route
                             },
                             onBack = { currentScreen = "Login" }
@@ -47,7 +48,18 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     currentScreen == "Dashboard" -> {
-                        MainDashboardScreen()
+                        MainDashboardScreen(
+                            onHomeClick = { currentScreen = "Dashboard" },
+                            onScholarshipsClick = { currentScreen = "Scholarships" },
+                            onUpdatesClick = { /* implement updates navigation */ },
+                            onProfileClick = { /* implement profile navigation */ }
+                        )
+                    }
+                    currentScreen == "Scholarships" -> {
+                        ScholarshipsRegistration(
+                            onBack = { currentScreen = "Dashboard" },
+                            onApplicationRegistrationSuccess = { currentScreen = "Dashboard" }
+                        )
                     }
                 }
             }

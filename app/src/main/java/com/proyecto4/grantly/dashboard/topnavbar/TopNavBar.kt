@@ -1,4 +1,4 @@
-package com.proyecto4.grantly.topnavbar
+package com.proyecto4.grantly.dashboard.topnavbar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
