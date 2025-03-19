@@ -1,7 +1,6 @@
 package com.proyecto4.grantly.registration.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -13,23 +12,27 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.proyecto4.grantly.R
 import com.proyecto4.grantly.ui.theme.MainPurple
 import android.util.Patterns
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(
+    onSignInSuccess: () -> Unit,
+    onNavigateToUserSelection: () -> Unit
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    val isFormValid = email.isNotBlank() && password.length >= 8 && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    val isFormValid = email.isNotBlank() &&
+            password.length >= 8 &&
+            Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
     Column(
         modifier = Modifier
@@ -38,7 +41,6 @@ fun LoginScreen(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Image(
             painter = painterResource(id = R.drawable.logo_bn_main),
             contentDescription = "App Logo",
@@ -66,7 +68,7 @@ fun LoginScreen(navController: NavController) {
             value = email,
             onValueChange = { email = it },
             label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -77,7 +79,7 @@ fun LoginScreen(navController: NavController) {
             label = { Text("Password") },
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -90,7 +92,7 @@ fun LoginScreen(navController: NavController) {
             onClick = {
                 val response = mockLogin(email, password)
                 if (response == "Success") {
-                    navController.navigate("home")
+                    onSignInSuccess()
                 } else {
                     errorMessage = response
                 }
@@ -116,15 +118,14 @@ fun LoginScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Start
         ) {
-            TextButton(onClick = { navController.navigate("userSelection") }) {
+            TextButton(onClick = onNavigateToUserSelection) {
                 Text("Don’t have an account? ", color = Color.Gray)
                 Text(
-                    "Sign In",
+                    text = "Sign In",
                     color = MainPurple,
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.SansSerif,
-                        color = MainPurple
+                        fontFamily = FontFamily.SansSerif
                     )
                 )
             }

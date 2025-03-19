@@ -1,29 +1,46 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.proyecto4.grantly.registration.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.proyecto4.grantly.registration.model.UserType
 import com.proyecto4.grantly.registration.screens.components.UserTypeCard
 
-
 @Composable
-fun UserSelectionScreen(navController: NavController) {
+fun UserSelectionScreen(
+    onUserTypeSelected: (String) -> Unit, // Callback when a user type is selected
+    onBack: () -> Unit                    // Callback for the back button
+) {
     val userTypes = listOf(
         UserType.Government,
         UserType.Student,
         UserType.EducationalInstitution
     )
 
-    Scaffold { innerPadding ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("") },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
         Box(
             modifier = Modifier
                 .padding(innerPadding)
@@ -56,7 +73,9 @@ fun UserSelectionScreen(navController: NavController) {
                         UserTypeCard(
                             userType = userType,
                             onSelect = {
-                                navController.navigate("registration/${userType.title.uppercase().replace(" ", "_")}")
+                                // Construct a route in the form "registration/<USER_TYPE>"
+                                val route = "registration/${userType.title.uppercase().replace(" ", "_")}"
+                                onUserTypeSelected(route)
                             }
                         )
                     }
@@ -68,7 +87,7 @@ fun UserSelectionScreen(navController: NavController) {
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .padding(top = 40.dp)
-                        .clickable { /* Handle contact */ }
+                        .clickable { /* Handle contact action */ }
                 )
             }
         }

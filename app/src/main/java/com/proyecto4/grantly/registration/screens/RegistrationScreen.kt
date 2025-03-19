@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.proyecto4.grantly.registration.screens
 
 import androidx.activity.compose.BackHandler
@@ -7,9 +9,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,20 +22,22 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.proyecto4.grantly.R
 import com.proyecto4.grantly.ui.theme.Cenfop4feTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen(navController: NavController, userType: String?) {
+fun RegistrationScreen(
+    userType: String?,
+    onBack: () -> Unit,
+    onRegistrationSuccess: () -> Unit
+) {
     Cenfop4feTheme {
         Scaffold(
             topBar = {
                 TopAppBar(
                     title = { Text("") },
                     navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
+                        IconButton(onClick = onBack) {
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
                                 contentDescription = "Back"
@@ -70,9 +74,9 @@ fun RegistrationScreen(navController: NavController, userType: String?) {
                 )
 
                 when (userType?.uppercase()) {
-                    "GOVERNMENT" -> GovernmentRegistrationForm(navController)
-                    "STUDENT" -> StudentRegistrationForm(navController)
-                    "EDUCATIONAL_INSTITUTION" -> InstitutionRegistrationForm(navController)
+                    "GOVERNMENT" -> GovernmentRegistrationForm(onRegistrationSuccess)
+                    "STUDENT" -> StudentRegistrationForm(onRegistrationSuccess)
+                    "EDUCATIONAL_INSTITUTION" -> InstitutionRegistrationForm(onRegistrationSuccess)
                     else -> ErrorScreen()
                 }
 
@@ -88,9 +92,7 @@ fun RegistrationScreen(navController: NavController, userType: String?) {
                         text = "Sign In",
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.clickable {
-                            navController.navigate("sign_in")
-                        }
+                        modifier = Modifier.clickable { onBack() }
                     )
                 }
             }
@@ -99,7 +101,7 @@ fun RegistrationScreen(navController: NavController, userType: String?) {
 }
 
 @Composable
-private fun GovernmentRegistrationForm(navController: NavController) {
+private fun GovernmentRegistrationForm(onRegistrationSuccess: () -> Unit) {
     var agencyName by remember { mutableStateOf("") }
     var department by remember { mutableStateOf("") }
     var country by remember { mutableStateOf("") }
@@ -117,14 +119,14 @@ private fun GovernmentRegistrationForm(navController: NavController) {
         FormTextField("Phone Number", phone, KeyboardOptions(keyboardType = KeyboardType.Phone)) { phone = it }
 
         SubmitButton("Register Agency") {
-            // Handle registration
-            navController.popBackStack()
+            // Handle registration then navigate to the dashboard
+            onRegistrationSuccess()
         }
     }
 }
 
 @Composable
-private fun StudentRegistrationForm(navController: NavController) {
+private fun StudentRegistrationForm(onRegistrationSuccess: () -> Unit) {
     var fullName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
@@ -151,14 +153,14 @@ private fun StudentRegistrationForm(navController: NavController) {
         FormTextField("Location", location) { location = it }
 
         SubmitButton("Create Account") {
-            // Handle registration
-            navController.popBackStack()
+            // Handle registration then navigate to the dashboard
+            onRegistrationSuccess()
         }
     }
 }
 
 @Composable
-private fun InstitutionRegistrationForm(navController: NavController) {
+private fun InstitutionRegistrationForm(onRegistrationSuccess: () -> Unit) {
     var institutionName by remember { mutableStateOf("") }
     var institutionType by remember { mutableStateOf("") }
     var address by remember { mutableStateOf("") }
@@ -176,8 +178,8 @@ private fun InstitutionRegistrationForm(navController: NavController) {
         FormTextField("Phone Number", phone, KeyboardOptions(keyboardType = KeyboardType.Phone)) { phone = it }
 
         SubmitButton("Register Institution") {
-            // Handle registration
-            navController.popBackStack()
+            // Handle registration then navigate to the dashboard
+            onRegistrationSuccess()
         }
     }
 }
